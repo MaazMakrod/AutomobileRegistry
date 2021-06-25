@@ -6,9 +6,9 @@
 </head>
 <body>
 <div class="container">
-<h1>Welcome to Auto's Database</h1>
+<h1>Welcome to the Automobiles's Database</h1>
 <p>
-<a href="login.php">Please Log In</a>
+<a href="login.php">Please log in</a>
 </p>
 </div>
 </body>

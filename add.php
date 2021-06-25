@@ -7,35 +7,33 @@ if(isset($_POST['canc'])){
 session_start();
 
 if(!isset($_SESSION['who'])){
-  die('Not logged in');
+  die('Access Denied');
 }
 
-$pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc', 'fred', 'zap');
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+require_once "pdo.php";
 
-if(isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage'])){
-  if(!is_numeric($_POST['year']) || !is_numeric($_POST['mileage'])){
+if(isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage']) && isset($_POST['model'])){
+  if(strlen($_POST['make']) < 1 || strlen($_POST['model']) < 1 || strlen($_POST['year']) < 1 || strlen($_POST['mileage']) < 1){
+    $_SESSION['failure'] = 'All fields are required';
+    header("Location: add.php");
+    return;
+  }
+  elseif(!is_numeric($_POST['year']) || !is_numeric($_POST['mileage'])){
     $_SESSION['failure'] = 'Mileage and year must be numeric';
     header("Location: add.php");
     return;
   }
-  elseif(strlen($_POST['make']) < 1){
-    $_SESSION['failure'] = 'Make is required';
-    header("Location: add.php");
-    return;
-  }
   else{
-    $sql = "INSERT INTO autos (make, year, mileage) VALUES (:make, :year, :mileage)";
+    $sql = "INSERT INTO autos (make, model, year, mileage) VALUES (:make, :model, :year, :mileage)";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(array(':make' => $_POST['make'], ':year' => $_POST['year'], ':mileage' => $_POST['mileage']));
-    $_SESSION['success'] = 'Record Inserted';
-    $_SESSION['added'] = true;
+    $stmt->execute(array(':make' => $_POST['make'], ':model' => $_POST['model'], ':year' => $_POST['year'], ':mileage' => $_POST['mileage']));
+    $_SESSION['success'] = 'Record Inserted';//change to record Inserted
     header("Location: view.php");
     return;
   }
 }
 else if(isset($_POST['add'])){
-  $_SESSION['failure'] = 'Must Fill In all Fields';
+  $_SESSION['failure'] = 'All fields are required';
 }
 ?>
 
@@ -47,7 +45,7 @@ else if(isset($_POST['add'])){
 </head>
 <body>
 <div class="container">
-<h1>Tracking Autos for <?= $_SESSION['who']?></h1>
+<h1>Tracking Automobiles for <?= $_SESSION['who']?></h1>
 
 <p>
 <?php
@@ -61,6 +59,8 @@ if (isset($_SESSION['failure'])) {
 <form method="POST">
   <label for="make">Make: </label>
   <input type="text" name="make" id="make"><br/>
+  <label for="model">Model: </label>
+  <input type="text" name="model" id="model"><br/>
   <label for="yr">Year: </label>
   <input type="text" name="year" id="yr"><br/>
   <label for="mile">Mileage: </label>
