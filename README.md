@@ -1,4 +1,4 @@
-# databasesWithPHPAndPDO
+# AutomobileRegistry
  A simple CRUD application that utilizes PHP, PDO, and SQL to put data into a mySQL database. I have used MAMP for my local host server. Images of the program are included below.
  
 ![image](https://user-images.githubusercontent.com/67477587/123446962-65da6b80-d5a7-11eb-8da0-4db0ab9aeca2.png)
